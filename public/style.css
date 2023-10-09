@@ -1,5 +1,7 @@
 :root {
-  --custom-clr: #f7f3fe;
+  --green-clr: #DCFF03;
+  --dark-clr: #33342F;
+  --light-clr: #FFFFFF;
 }
 
 @font-face {
@@ -23,8 +25,96 @@
   font-style: normal;
 }
 
+html,
 body {
-  background-color: darkslateblue;
-  color: var(--custom-clr);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  background-color: transparent;
+  border-radius: 0;
+  border: 1px solid var(--dark-clr);
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--green-clr);
+  color: var(--dark-clr);
   font-family: 'Comfortaa', sans-serif;
+}
+
+.btn {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--dark-clr);
+}
+
+.main-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content__section {
+  padding: 0.75rem 1rem;
+}
+
+.main-content__section:first-child {
+  border-bottom: 1px solid var(--dark-clr);
+}
+
+.guess-form__submit-btn {
+  background-color: var(--dark-clr);
+  color: var(--light-clr);
+}
+
+@media screen and (min-width: 48rem) {
+  .main-content {
+    flex-direction: row;
+  }
+
+  .main-content__section {
+    min-height: 100vh;
+  }
+
+  .main-content__section:first-child {
+    border-bottom: none;
+    border-right: 1px solid var(--dark-clr);
+  }
 }

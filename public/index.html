@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,39 @@
   <link rel="icon" type="image/png" href="./favicon-96.png">
   <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-  <h1>Hello world!</h1>
-  <form action="/api/guess" method="post">
-    <input type="number" name="guess" placeholder="Guess" class="input">
-    <button type="submit" class="btn">Guess</button>
-  </form>
+  <main class="main-content">
+    <section class="main-content__section">
+      <h1>Number guessing game</h1>
+      <h2>Instructions</h2>
+      <p>
+        Choose a difficulty and click the 'start' button to begin the game. If your guess is too high or too low, you'll
+        receive a hint.
+      </p>
+      <form class="new-game-form">
+        <select placeholder="choose an option">
+          <option>Easy</option>
+          <option>Medium</option>
+          <option>Hard</option>
+        </select>
+        <button type="submit" class="btn new-game-form__submit-btn">New Game</button>
+      </form>
+    </section>
+    <section class="main-content__section">
+      <h2>Play</h2>
+      <p>
+        We have selected a random number between 1 and 100. Try to guess in as few tries as possible.
+      </p>
+      <form class="guess-form">
+        <div>
+          <label>Enter your guess</label>
+          <input type="number">
+        </div>
+        <button type="submit" class="btn guess-form__submit-btn">Submit</button>
+      </form>
+    </section>
+  </main>
 </body>
+
 </html>
