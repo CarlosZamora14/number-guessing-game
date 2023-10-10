@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Number Guessing Game</title>
   <link rel="icon" type="image/png" href="./favicon-96.png">
   <link rel="stylesheet" href="./style.css">
+  <script defer src="./main.js"></script>
 </head>
 
 <body>
@@ -19,10 +20,10 @@
         receive a hint.
       </p>
       <form class="new-game-form">
-        <select placeholder="choose an option">
-          <option>Easy</option>
-          <option>Medium</option>
-          <option>Hard</option>
+        <select name="difficulty" placeholder="Choose a difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
         </select>
         <button type="submit" class="btn new-game-form__submit-btn">New Game</button>
       </form>
@@ -35,10 +36,11 @@
       <form class="guess-form">
         <div>
           <label>Enter your guess</label>
-          <input type="number">
+          <input type="number" name="guess" min="1" max="1000" step="1">
         </div>
         <button type="submit" class="btn guess-form__submit-btn">Submit</button>
       </form>
+      <p>If you want to change the difficulty or restart the game, click the 'new game' button.</p>
     </section>
   </main>
 </body>
