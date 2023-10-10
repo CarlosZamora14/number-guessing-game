@@ -28,6 +28,30 @@ function updateGameState(sessionId, guess, sessionTimeout) {
   return true;
 }
 
+function hasWon(sessionId, guess) {
+  return (guess - sessions.get(sessionId).gameState.number);
+}
+
+function getPreviousGuesses(sessionId) {
+  if (!(sessionId && sessions.has(sessionId))) {
+    return null;
+  }
+
+  return sessions.get(sessionId).gameState.guesses;
+}
+
+function hasKey(sessionId) {
+  return (sessionId && sessions.has(sessionId));
+}
+
+function isSessionActive(sessionId) {
+  return (hasKey(sessionId) && sessions.get(sessionId).expirationTime > Date.now());
+}
+
+function deleteSession(sessionId) {
+  return sessions.delete(sessionId);
+}
+
 function cleanup() {
   sessions.forEach((session, key) => {
     if (session.expirationTime < Date.now()) {
@@ -36,4 +60,4 @@ function cleanup() {
   });
 }
 
-module.exports = { sessions, createSession, updateGameState, cleanup };
+module.exports = { getPreviousGuesses, createSession, updateGameState, cleanup, deleteSession, isSessionActive, hasWon };
