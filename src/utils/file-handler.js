@@ -21,7 +21,7 @@ const mimeTypes = {
   '.wasm': 'application/wasm',
 };
 
-const parseUrl = url => {
+function parseUrl(url) {
   let [pathname, ...rest] = url.split('?');
   if (pathname === '/') pathname = '/index.html';
 
@@ -34,9 +34,9 @@ const parseUrl = url => {
   }
 
   return {};
-};
+}
 
-const staticFileHandler = (request, response, filePath, contentType, statusCodeOnSuccess = 200) => {
+function staticFileHandler(request, response, filePath, contentType, statusCodeOnSuccess = 200) {
   fs.readFile(filePath, (err, content) => {
     if (err) {
       if (err.code === 'ENOENT') {
@@ -51,9 +51,9 @@ const staticFileHandler = (request, response, filePath, contentType, statusCodeO
       response.end(content, 'utf-8');
     }
   });
-};
+}
 
-const requestListener = (request, response) => {
+function requestListener(request, response) {
   const { filePath, contentType } = parseUrl(request.url);
   staticFileHandler(request, response, filePath ?? '', contentType ?? '');
 };
