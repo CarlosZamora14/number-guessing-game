@@ -20,7 +20,7 @@
         receive a hint.
       </p>
       <form class="new-game-form">
-        <select name="difficulty" placeholder="Choose a difficulty">
+        <select name="difficulty" placeholder="Choose a difficulty" class="new-game-form__select">
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
@@ -43,6 +43,14 @@
       <p>If you want to change the difficulty or restart the game, click the 'new game' button.</p>
     </section>
   </main>
+  <template id="popup-template">
+    <div class="popup__background">
+      <span class="popup__escape">[esc] to close</span>
+      <div class="popup">
+        <p>Some test Text</p>
+      </div>
+    </div>
+  </template>
 </body>
 
 </html>

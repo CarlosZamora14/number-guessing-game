@@ -12,13 +12,30 @@ function getUrlParams(form) {
   return data;
 }
 
+function showPopup(msg) {
+  if ('content' in document.createElement('template')) {
+    const template = document.getElementById('popup-template');
+
+    const clone = template.content.cloneNode(true);
+    let text = clone.querySelector('p');
+    text.textContent = msg;
+
+    document.body.appendChild(clone);
+  } else {
+    alert(msg);
+  }
+}
+
 window.addEventListener('load', () => {
   fetch('/api/is-playing')
     .then(res => res.json())
     .then(data => {
       console.log(data);
+      if (data.status !== 200) {
+        showPopup(JSON.stringify(data.msg));
+      }
     }).catch(err => {
-      console.error(err);
+      showPopup(JSON.stringify(err.msg));
     });
 });
 
@@ -29,13 +46,15 @@ newGameForm.addEventListener('submit', evt => {
   fetch('/api/start-game', {
     method: 'POST',
     body: data
-  }).then(res => {
-    return res.json();
-  }).then(data => {
-    console.log(data);
-  }).catch(err => {
-    console.error(err);
-  });
+  }).then(res => res.json())
+    .then(data => {
+      console.log(data);
+      if (data.status !== 200) {
+        showPopup(JSON.stringify(data.msg));
+      }
+    }).catch(err => {
+      showPopup(JSON.stringify(err.msg));
+    });
 });
 
 guessForm.addEventListener('submit', evt => {
@@ -45,11 +64,20 @@ guessForm.addEventListener('submit', evt => {
   fetch('/api/guess', {
     method: 'POST',
     body: data
-  }).then(res => {
-    return res.json();
-  }).then(data => {
-    console.log(data);
-  }).catch(err => {
-    console.error(err);
-  });
+  }).then(res => res.json())
+    .then(data => {
+      console.log(data);
+      if (data.status !== 200) {
+        showPopup(JSON.stringify(data.msg));
+      }
+    }).catch(err => {
+      showPopup(JSON.stringify(err.msg));
+    });
+});
+
+document.addEventListener('keydown', evt => {
+  if (evt.key === 'Escape') {
+    const popups = document.querySelectorAll('.popup__background');
+    popups.forEach(popup => document.body.removeChild(popup));
+  }
 });
