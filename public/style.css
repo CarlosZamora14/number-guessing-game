@@ -1,31 +1,38 @@
+/* CSS variables */
 :root {
-  /* --green-clr: #C1FF4E; */
-  --green-clr: #DCFF03;
-  --dark-clr: #33342F;
-  --light-clr: #FFFFFF;
+  --green-clr: 220 255 3;
+  --dark-clr: 51 52 47;
+  --light-clr: 255 255 255;
+  --blue-clr: 0 0 255;
+
+  --regular-fs: 0.875rem;
+  --medium-fs: 1rem;
+  --big-fs: 1.25rem;
 }
 
+/* Font faces */
 @font-face {
   font-family: 'Comfortaa';
-  src: local('Comfortaa'), url('Comfortaa-Regular.ttf') format('truetype');
+  src: local('Comfortaa'), url('./Comfortaa-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Comfortaa';
-  src: url('Comfortaa-SemiBold.ttf'), format('truetype');
+  src: local('Comfortaa-SemiBold'), url('./Comfortaa-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Comfortaa';
-  src: url('Comfortaa-Bold.ttf'), format('truetype');
+  src: local('Comfortaa-Bold'), url('./Comfortaa-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
 
+/* CSS reset */
 html,
 body {
   margin: 0;
@@ -53,9 +60,10 @@ button,
 textarea,
 select {
   font: inherit;
+  font-size: var(--regular-fs);
   background-color: transparent;
   border-radius: 0;
-  border: 1px solid var(--dark-clr);
+  border: 1px solid rgb(var(--dark-clr));
 }
 
 button,
@@ -75,16 +83,28 @@ h6 {
   padding: 0;
 }
 
+h1 {
+  font-size: var(--big-fs);
+}
+
+h2 {
+  font-size: var(--medium-fs);
+  font-weight: 600;
+}
+
 body {
-  background-color: var(--green-clr);
-  color: var(--dark-clr);
+  background-color: rgb(var(--green-clr));
+  color: rgb(var(--dark-clr));
   font-family: 'Comfortaa', sans-serif;
+  font-size: var(--regular-fs);
 }
 
 .btn {
   padding: 0.25rem 0.75rem;
+  font-weight: 600;
 }
 
+/* Rulesets for main-content component */
 .main-content {
   position: relative;
   display: flex;
@@ -96,13 +116,24 @@ body {
 }
 
 .main-content__section:first-child {
-  border-bottom: 1px solid var(--dark-clr);
+  border-bottom: 1px solid rgb(var(--dark-clr));
 }
 
+/* Rulesets for new-game-section component */
+.new-game-section__subtitle {
+  margin-top: 1rem;
+}
+
+.new-game-section__instruction {
+  margin-top: 0.25rem;
+}
+
+/* Rulesets for new-game-form component */
 .new-game-form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-top: 1.25rem;
 }
 
 .new-game-form__select {
@@ -112,22 +143,67 @@ body {
   text-align: center;
 }
 
-.guess-form__submit-btn {
-  background-color: var(--dark-clr);
-  color: var(--light-clr);
+/* Rulesets for guess-section */
+.guess-section__paragraph {
+  margin-top: 0.25rem;
 }
 
-.popup__background {
+.guess-section__advice {
+  margin-top: 4rem;
+}
+
+.guess-section__game-status {
+  margin-top: 1rem;
+}
+
+.guess-section__game-status__hint.wrong::before {
+  content: '\274C';
+}
+
+.guess-section__game-status__previous-guesses {
+  margin-top: 0.5rem;
+}
+
+/* Rulesets for guess-form component */
+.guess-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.25rem;
+}
+
+.guess-form__field {
+  flex-grow: 1;
+}
+
+.guess_form__input {
+  display: block;
+  margin-top: 0.25rem;
+  padding: 0.75rem;
+  width: 100%;
+  max-width: 20rem;
+}
+
+.guess-form__submit-btn {
+  margin-top: 1rem;
+  padding-block: 0.75rem;
+  width: 100%;
+  max-width: 12rem;
+  background-color: rgb(var(--dark-clr));
+  color: rgb(var(--light-clr));
+}
+
+/* Rulesets for popup component */
+.popup {
   position: fixed;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(0 0 0 / 0.5);
+  background-color: rgb(var(--dark-clr) / 0.5);
   backdrop-filter: invert(70%);
 }
 
-.popup {
+.popup__card {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -136,29 +212,52 @@ body {
   height: 80%;
   max-width: 24rem;
   max-height: 24rem;
-  background-color: rgb(255 255 255 / 0.80);
+  background-color: rgb(var(--light-clr) / 0.80);
 }
 
-.popup p {
+.popup__message {
+  font-weight: 600;
   word-break: break-all;
 }
 
-.popup__escape {
+.popup__escape-btn {
   position: fixed;
   top: min(2vh, 2vw);
   left: min(2vh, 2vw);
-  color: var(--light-clr);
+  color: rgb(var(--light-clr));
   padding: 0.375rem 0.5rem;
-  background-color: blue;
+  background-color: rgb(var(--blue-clr));
+  cursor: pointer;
+  transition: background-color 250ms ease-in-out, color 250ms ease-in-out;
 }
 
+.popup__escape-btn:hover {
+  background-color: rgb(var(--light-clr));
+  color: rgb(var(--blue-clr));
+}
+
+/* Media queries */
 @media screen and (min-width: 20rem) {
   .new-game-form {
     flex-direction: row;
   }
 }
 
+@media screen and (min-width: 36rem) {
+  :root {
+    --regular-fs: 0.9375rem;
+    --medium-fs: 1.125rem;
+    --big-fs: 1.5rem;
+  }
+}
+
 @media screen and (min-width: 48rem) {
+  :root {
+    --regular-fs: 1rem;
+    --medium-fs: 1.25rem;
+    --big-fs: 1.75rem;
+  }
+
   .main-content {
     flex-direction: row;
   }
@@ -169,6 +268,12 @@ body {
 
   .main-content__section:first-child {
     border-bottom: none;
-    border-right: 1px solid var(--dark-clr);
+    border-right: 1px solid rgb(var(--dark-clr));
+  }
+}
+
+@media screen and (min-width: 60rem) {
+  :root {
+    --big-fs: 2rem;
   }
 }

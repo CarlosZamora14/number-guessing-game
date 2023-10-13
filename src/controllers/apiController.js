@@ -4,6 +4,7 @@ const { generateNumber } = require('../utils/get-number.js');
 const {
   isSessionActive,
   getPreviousGuesses,
+  getGameDifficulty,
   createSession,
   updateGameState,
   hasWon,
@@ -23,9 +24,14 @@ function isPlaying(request, response) {
   const cookies = parseCookies(request);
   const isPlaying = cookies.hasOwnProperty('session-id') && isSessionActive(cookies['session-id']);
 
-  const data = { isPlaying };
+  const data = { isPlaying, statusCode: 200 };
   if (isPlaying) {
     data.previousGuesses = getPreviousGuesses(cookies['session-id']);
+    data.difficulty = getGameDifficulty(cookies['session-id']);
+    if (data.previousGuesses.length) {
+      const sign = hasWon(cookies['session-id'], data.previousGuesses.at(-1));
+      data.lastMsg = `Wrong! Your guess was too ${sign < 0 ? 'low' : 'high'}`;
+    }
   }
 
   response.writeHead(200, { 'Content-Type': 'application/json' });
@@ -48,16 +54,16 @@ function startGame(request, response, body) {
 
   if (!difficulties[difficulty]) {
     response.writeHead(400, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify({ msg: 'Invalid difficulty' }));
+    response.end(JSON.stringify({ statusCode: 400, msg: 'Invalid difficulty' }));
   } else {
     const { min, max } = difficulties[difficulty];
     const sessionId = crypto.randomUUID();
     const number = generateNumber(min, max);
 
     setCookie(response, 'session-id', sessionId, sessionTimeout);
-    createSession(sessionId, number, Date.now() + sessionTimeoutInMilliseconds);
+    createSession(sessionId, number, Date.now() + sessionTimeoutInMilliseconds, difficulties[difficulty]);
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify({ msg: 'Game started successfully' }));
+    response.end(JSON.stringify({ statusCode: 200, msg: 'Game started successfully' }));
   }
 }
 
@@ -70,27 +76,28 @@ function guess(request, response, body) {
 
     if (!guess.match(numberPattern)) {
       response.writeHead(400, { 'Content-Type': 'application/json' });
-      return response.end(JSON.stringify({ msg: 'Not a valid number. Try again' }));
+      return response.end(JSON.stringify({ statusCode: 400, msg: 'Not a valid number. Try again' }));
     }
 
     updateGameState(cookies['session-id'], parseInt(guess, 10), sessionTimeoutInMilliseconds);
 
     response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
-    let msg, sign = hasWon(cookies['session-id'], guess);
+    let msg, done = false, sign = hasWon(cookies['session-id'], guess);
     const previousGuesses = getPreviousGuesses(cookies['session-id']);
 
     if (sign !== 0) {
       msg = `Wrong! Your guess was too ${sign < 0 ? 'low' : 'high'}`;
     } else {
+      done = true;
       msg = `You guessed the correct number in ${previousGuesses.length} tries`;
       resetGame(request, response);
     }
 
-    response.end(JSON.stringify({ msg, previousGuesses }));
+    response.end(JSON.stringify({ statusCode: 200, msg, previousGuesses, done }));
   } else {
     response.writeHead(400, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify({ msg: 'Please start a new game' }));
+    response.end(JSON.stringify({ statusCode: 400, msg: 'Please start a new game' }));
   }
 }
 

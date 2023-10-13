@@ -1,6 +1,6 @@
 const sessions = new Map();
 
-function createSession(sessionId, number, expirationTime) {
+function createSession(sessionId, number, expirationTime, difficulty) {
   if (!sessionId || sessions.has(sessionId)) {
     return false;
   }
@@ -9,7 +9,8 @@ function createSession(sessionId, number, expirationTime) {
     expirationTime: expirationTime,
     gameState: {
       guesses: [],
-      number: number
+      number: number,
+      difficulty: difficulty
     }
   };
 
@@ -40,6 +41,14 @@ function getPreviousGuesses(sessionId) {
   return sessions.get(sessionId).gameState.guesses;
 }
 
+function getGameDifficulty(sessionId) {
+  if (!(sessionId && sessions.has(sessionId))) {
+    return null;
+  }
+
+  return sessions.get(sessionId).gameState.difficulty;
+}
+
 function hasKey(sessionId) {
   return (sessionId && sessions.has(sessionId));
 }
@@ -60,4 +69,13 @@ function cleanup() {
   });
 }
 
-module.exports = { getPreviousGuesses, createSession, updateGameState, cleanup, deleteSession, isSessionActive, hasWon };
+module.exports = {
+  getPreviousGuesses,
+  createSession,
+  updateGameState,
+  cleanup,
+  deleteSession,
+  isSessionActive,
+  hasWon,
+  getGameDifficulty
+};
