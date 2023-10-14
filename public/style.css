@@ -143,9 +143,20 @@ body {
   text-align: center;
 }
 
+.new-game-form__submit-btn:is(:hover, :focus) {
+  background-color: rgb(var(--dark-clr) / 0.9);
+  color: rgb(var(--light-clr));
+}
+
 /* Rulesets for guess-section */
 .guess-section__paragraph {
   margin-top: 0.25rem;
+}
+
+.guess-section__number {
+  text-align: center;
+  font-weight: 700;
+  font-size: calc(var(--big-fs) * 6);
 }
 
 .guess-section__advice {
@@ -192,6 +203,10 @@ body {
   color: rgb(var(--light-clr));
 }
 
+.guess-form__submit-btn:is(:hover, :focus) {
+  background-color: rgb(var(--dark-clr) / 0.9);
+}
+
 /* Rulesets for popup component */
 .popup {
   position: fixed;
@@ -199,8 +214,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(var(--dark-clr) / 0.5);
-  backdrop-filter: invert(70%);
+  background-color: rgb(var(--light-clr) / 0.8);
 }
 
 .popup__card {
@@ -208,11 +222,11 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  width: 80%;
-  height: 80%;
+  width: min(94vh, 94vw);
+  height: min(94vh, 94vw);
   max-width: 24rem;
   max-height: 24rem;
-  background-color: rgb(var(--light-clr) / 0.80);
+  background-color: transparent;
 }
 
 .popup__message {
@@ -224,16 +238,40 @@ body {
   position: fixed;
   top: min(2vh, 2vw);
   left: min(2vh, 2vw);
-  color: rgb(var(--light-clr));
   padding: 0.375rem 0.5rem;
-  background-color: rgb(var(--blue-clr));
   cursor: pointer;
+  background-color: rgb(var(--dark-clr));
+  color: rgb(var(--light-clr));
   transition: background-color 250ms ease-in-out, color 250ms ease-in-out;
 }
 
-.popup__escape-btn:hover {
+/* Popup variations */
+.popup.error {
+  background-color: rgb(var(--dark-clr) / 0.5);
+  backdrop-filter: invert(70%);
+}
+
+.popup.error .popup__card {
+  background-color: rgb(var(--light-clr) / 0.8);
+}
+
+.popup.error .popup__escape-btn {
+  color: rgb(var(--light-clr));
+  background-color: rgb(var(--blue-clr));
+}
+
+.popup.error .popup__escape-btn:is(:hover, :focus) {
   background-color: rgb(var(--light-clr));
   color: rgb(var(--blue-clr));
+}
+
+.popup.timeout .popup__message {
+  font-size: var(--medium-fs);
+}
+
+.popup.timeout .popup__escape-btn:is(:hover, :focus) {
+  background-color: rgb(var(--blue-clr) / 0.9);
+  color: rgb(var(--light-clr));
 }
 
 /* Media queries */
@@ -264,6 +302,7 @@ body {
 
   .main-content__section {
     min-height: 100vh;
+    width: 50%;
   }
 
   .main-content__section:first-child {

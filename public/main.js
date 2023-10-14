@@ -1,5 +1,7 @@
 const newGameForm = document.querySelector('.new-game-form');
-const guessForm = document.querySelector('.guess-form');
+let guessForm;
+
+const PopupTypes = { ERROR: 0, SESSION_TIMEOUT: 1 };
 
 function getUrlParams(form) {
   const formData = new FormData(form);
@@ -10,6 +12,41 @@ function getUrlParams(form) {
   }
 
   return data;
+}
+
+function appendTemplate(templateSelector, containerSelector) {
+  if ('content' in document.createElement('template')) {
+    const template = document.querySelector(templateSelector);
+
+    const clone = template.content.cloneNode(true);
+    const container = document.querySelector(containerSelector);
+    container.appendChild(clone);
+    return true;
+  }
+
+  return false;
+}
+
+function clearGuessSection() {
+  const section = document.querySelector('.guess-section');
+  while (section.firstChild) {
+    section.removeChild(section.firstChild);
+  }
+}
+
+function showGuessSection() {
+  clearGuessSection();
+  if (appendTemplate('#guess-section-template', '.guess-section')) {
+    guessForm = document.querySelector('.guess-form');
+    guessForm.addEventListener('submit', submitGuessForm);
+  }
+}
+
+function showVictorySection(number) {
+  clearGuessSection();
+  appendTemplate('#victory-section-template', '.guess-section');
+  const paragraph = document.querySelector('.guess-section__number');
+  paragraph.innerText = number;
 }
 
 function populateGameStatus(hintMsg, previousGuesses, done) {
@@ -42,6 +79,10 @@ function resetGameStatus() {
 function setDifficulty(min, max) {
   document.querySelector('.guess-section__paragraph .min').innerText = min;
   document.querySelector('.guess-section__paragraph .max').innerText = max;
+
+  const inputElement = document.querySelector('.guess_form__input');
+  inputElement.setAttribute('min', min);
+  inputElement.setAttribute('max', max);
 }
 
 function closePopups() {
@@ -49,12 +90,26 @@ function closePopups() {
   popups.forEach(popup => document.body.removeChild(popup));
 }
 
-function showPopup(msg) {
+function showPopup(msg, type = PopupTypes.ERROR) {
+  closePopups();
   if ('content' in document.createElement('template')) {
     const template = document.getElementById('popup-template');
 
     const clone = template.content.cloneNode(true);
+    const popup = clone.querySelector('.popup');
     const message = clone.querySelector('.popup__message');
+    const btn = clone.querySelector('.popup__escape-btn');
+
+    switch (type) {
+      case PopupTypes.ERROR:
+        popup.classList.add('error');
+        break;
+      case PopupTypes.SESSION_TIMEOUT:
+        popup.classList.add('timeout');
+        break;
+    }
+
+    btn.addEventListener('click', closePopups);
     message.innerText = msg;
 
     document.body.appendChild(clone);
@@ -67,13 +122,13 @@ window.addEventListener('load', () => {
   fetch('/api/is-playing')
     .then(res => res.json())
     .then(data => {
-      console.log(data);
       if (data.statusCode !== 200) {
         showPopup(data.msg);
       } else {
-        console.log(data);
         if (data.isPlaying) {
+          showGuessSection();
           setDifficulty(data.difficulty.min, data.difficulty.max);
+          console.log(new Date(data.expirationTime));
           if (data.previousGuesses.length) {
             populateGameStatus(data.lastMsg, data.previousGuesses);
           }
@@ -100,10 +155,11 @@ newGameForm.addEventListener('submit', evt => {
   }).then(res => res.json())
     .then(data => {
       if (data.statusCode !== 200) {
-        console.log(typeof data.statusCode);
         showPopup(data.msg);
       } else {
-        console.log(data);
+        showGuessSection();
+        setDifficulty(data.difficulty.min, data.difficulty.max);
+        console.log(new Date(data.expirationTime));
         resetGameStatus();
       }
     }).catch(err => {
@@ -111,7 +167,7 @@ newGameForm.addEventListener('submit', evt => {
     });
 });
 
-guessForm.addEventListener('submit', evt => {
+function submitGuessForm(evt) {
   evt.preventDefault();
   const data = getUrlParams(evt.target);
 
@@ -120,14 +176,20 @@ guessForm.addEventListener('submit', evt => {
     body: data
   }).then(res => res.json())
     .then(data => {
+      guessForm.reset();
+
       if (data.statusCode !== 200) {
+        console.error(data);
         showPopup(data.msg);
       } else {
-        guessForm.reset();
-        console.log(data);
+        console.log(data.expirationTime);
+        console.log(new Date(data.expirationTime));
+        if (data.done) {
+          showVictorySection(data.previousGuesses.at(-1));
+        }
         populateGameStatus(data.msg, data.previousGuesses, data.done);
       }
     }).catch(err => {
       showPopup(JSON.stringify(err.msg));
     });
-});
+};

@@ -9,11 +9,12 @@ const {
   updateGameState,
   hasWon,
   deleteSession,
+  getExpirationTime,
 } = require('../utils/sessions.js');
 
 const numberPattern = /^[0-9]+$/;
 const sessionTimeout = 60 * 15; // 15 minutes
-const sessionTimeoutInMilliseconds = 3600 * 60 * 15;
+const sessionTimeoutInMilliseconds = 1000 * 60 * 15;
 const difficulties = {
   'easy': { min: 1, max: 10 },
   'medium': { min: 1, max: 100 },
@@ -28,6 +29,7 @@ function isPlaying(request, response) {
   if (isPlaying) {
     data.previousGuesses = getPreviousGuesses(cookies['session-id']);
     data.difficulty = getGameDifficulty(cookies['session-id']);
+    data.expirationTime = getExpirationTime(cookies['session-id']);
     if (data.previousGuesses.length) {
       const sign = hasWon(cookies['session-id'], data.previousGuesses.at(-1));
       data.lastMsg = `Wrong! Your guess was too ${sign < 0 ? 'low' : 'high'}`;
@@ -59,11 +61,12 @@ function startGame(request, response, body) {
     const { min, max } = difficulties[difficulty];
     const sessionId = crypto.randomUUID();
     const number = generateNumber(min, max);
+    const expirationTime = Date.now() + sessionTimeoutInMilliseconds;
 
     setCookie(response, 'session-id', sessionId, sessionTimeout);
-    createSession(sessionId, number, Date.now() + sessionTimeoutInMilliseconds, difficulties[difficulty]);
+    createSession(sessionId, number, expirationTime, difficulties[difficulty]);
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify({ statusCode: 200, msg: 'Game started successfully' }));
+    response.end(JSON.stringify({ statusCode: 200, msg: 'Game started successfully', difficulty: { min, max }, expirationTime }));
   }
 }
 
@@ -85,6 +88,7 @@ function guess(request, response, body) {
     response.setHeader('Content-Type', 'application/json');
     let msg, done = false, sign = hasWon(cookies['session-id'], guess);
     const previousGuesses = getPreviousGuesses(cookies['session-id']);
+    const expirationTime = getExpirationTime(cookies['session-id']);
 
     if (sign !== 0) {
       msg = `Wrong! Your guess was too ${sign < 0 ? 'low' : 'high'}`;
@@ -94,7 +98,7 @@ function guess(request, response, body) {
       resetGame(request, response);
     }
 
-    response.end(JSON.stringify({ statusCode: 200, msg, previousGuesses, done }));
+    response.end(JSON.stringify({ statusCode: 200, msg, previousGuesses, done, expirationTime }));
   } else {
     response.writeHead(400, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify({ statusCode: 400, msg: 'Please start a new game' }));

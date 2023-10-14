@@ -28,28 +28,44 @@
         <button type="submit" class="btn new-game-form__submit-btn">New Game</button>
       </form>
     </section>
-    <section class="main-content__section guess-section">
-      <h2 class="guess-section__title">Play</h2>
-      <p class="guess-section__paragraph">
-        We have selected a random number between <span class="min">1</span> and <span class="max">100</span>. Try to guess in as few tries as possible.
-      </p>
-      <form class="guess-form">
-        <div class="guess-form__field">
-          <label class="guess-form__label" for="guess-btn">Enter your guess</label>
-          <input type="number" class="guess_form__input" id="guess-btn" name="guess" min="1" max="1000" step="1">
-        </div>
-        <button type="submit" class="btn guess-form__submit-btn">Submit</button>
-      </form>
-      <div class="guess-section__game-status">
-        <p class="guess-section__game-status__hint"></p>
-        <p class="guess-section__game-status__previous-guesses"></p>
-      </div>
-      <p class="guess-section__advice">If you want to change the difficulty or restart the game, click the 'new game' button.</p>
-    </section>
+    <section class="main-content__section guess-section"></section>
   </main>
+
+  <template id="guess-section-template">
+    <h2 class="guess-section__title">Play</h2>
+    <p class="guess-section__paragraph">
+      We have selected a random number between <span class="min">1</span> and <span class="max">100</span>. Try to guess
+      in as few tries as possible.
+    </p>
+    <form class="guess-form">
+      <div class="guess-form__field">
+        <label class="guess-form__label" for="guess-btn">Enter your guess</label>
+        <input type="number" class="guess_form__input" id="guess-btn" name="guess" step="1">
+      </div>
+      <button type="submit" class="btn guess-form__submit-btn">Submit</button>
+    </form>
+    <div class="guess-section__game-status">
+      <p class="guess-section__game-status__hint"></p>
+      <p class="guess-section__game-status__previous-guesses"></p>
+    </div>
+    <p class="guess-section__advice">If you want to change the difficulty or restart the game, click the 'new game'
+      button.</p>
+  </template>
+
+  <template id="victory-section-template">
+    <h2 class="guess-section__title">Congratulations</h2>
+    <div class="guess-section__game-status">
+      <p class="guess-section__game-status__hint"></p>
+      <p class="guess-section__number"></p>
+      <p class="guess-section__game-status__previous-guesses"></p>
+    </div>
+    <p class="guess-section__advice">If you want to change the difficulty or restart the game, click the 'new game'
+      button.</p>
+  </template>
+
   <template id="popup-template">
     <div class="popup">
-      <button onclick="closePopups()" class="popup__escape-btn">[esc] to close</button>
+      <button class="popup__escape-btn">[esc] to close</button>
       <div class="popup__card">
         <p class="popup__message"></p>
       </div>

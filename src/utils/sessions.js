@@ -49,6 +49,14 @@ function getGameDifficulty(sessionId) {
   return sessions.get(sessionId).gameState.difficulty;
 }
 
+function getExpirationTime(sessionId) {
+  if (!(sessionId && sessions.has(sessionId))) {
+    return null;
+  }
+
+  return sessions.get(sessionId).expirationTime;
+}
+
 function hasKey(sessionId) {
   return (sessionId && sessions.has(sessionId));
 }
@@ -77,5 +85,6 @@ module.exports = {
   deleteSession,
   isSessionActive,
   hasWon,
-  getGameDifficulty
+  getGameDifficulty,
+  getExpirationTime,
 };
