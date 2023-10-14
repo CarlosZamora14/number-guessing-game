@@ -1,7 +1,19 @@
 const newGameForm = document.querySelector('.new-game-form');
-let guessForm;
+let guessForm, timeout;
 
 const PopupTypes = { ERROR: 0, SESSION_TIMEOUT: 1 };
+
+function timeoutSetup(time) {
+  if (timeout) clearTimeout(timeout);
+
+  if (time !== null) {
+    timeout = setTimeout(() => {
+      const msg = 'Your session has expired. Please start a new game';
+      clearGuessSection();
+      showPopup(msg, PopupTypes.SESSION_TIMEOUT);
+    }, time);
+  }
+}
 
 function getUrlParams(form) {
   const formData = new FormData(form);
@@ -128,7 +140,7 @@ window.addEventListener('load', () => {
         if (data.isPlaying) {
           showGuessSection();
           setDifficulty(data.difficulty.min, data.difficulty.max);
-          console.log(new Date(data.expirationTime));
+          timeoutSetup(data.expirationTime - Date.now());
           if (data.previousGuesses.length) {
             populateGameStatus(data.lastMsg, data.previousGuesses);
           }
@@ -158,8 +170,8 @@ newGameForm.addEventListener('submit', evt => {
         showPopup(data.msg);
       } else {
         showGuessSection();
+        timeoutSetup(data.expirationTime - Date.now());
         setDifficulty(data.difficulty.min, data.difficulty.max);
-        console.log(new Date(data.expirationTime));
         resetGameStatus();
       }
     }).catch(err => {
@@ -179,13 +191,13 @@ function submitGuessForm(evt) {
       guessForm.reset();
 
       if (data.statusCode !== 200) {
-        console.error(data);
         showPopup(data.msg);
       } else {
-        console.log(data.expirationTime);
-        console.log(new Date(data.expirationTime));
         if (data.done) {
           showVictorySection(data.previousGuesses.at(-1));
+          timeoutSetup(null);
+        } else {
+          timeoutSetup(data.expirationTime - Date.now());
         }
         populateGameStatus(data.msg, data.previousGuesses, data.done);
       }

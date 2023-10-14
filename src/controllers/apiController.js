@@ -14,7 +14,7 @@ const {
 
 const numberPattern = /^[0-9]+$/;
 const sessionTimeout = 60 * 15; // 15 minutes
-const sessionTimeoutInMilliseconds = 1000 * 60 * 15;
+const sessionTimeoutInMilliseconds = 1000 * sessionTimeout;
 const difficulties = {
   'easy': { min: 1, max: 10 },
   'medium': { min: 1, max: 100 },

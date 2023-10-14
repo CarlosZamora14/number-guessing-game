@@ -109,10 +109,11 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .main-content__section {
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 2vw;
 }
 
 .main-content__section:first-child {
@@ -143,7 +144,7 @@ body {
   text-align: center;
 }
 
-.new-game-form__submit-btn:is(:hover, :focus) {
+.new-game-form__submit-btn:hover {
   background-color: rgb(var(--dark-clr) / 0.9);
   color: rgb(var(--light-clr));
 }
@@ -203,7 +204,7 @@ body {
   color: rgb(var(--light-clr));
 }
 
-.guess-form__submit-btn:is(:hover, :focus) {
+.guess-form__submit-btn:hover {
   background-color: rgb(var(--dark-clr) / 0.9);
 }
 
@@ -303,6 +304,8 @@ body {
   .main-content__section {
     min-height: 100vh;
     width: 50%;
+    padding: 0.75rem 1rem;
+    max-width: 45rem;
   }
 
   .main-content__section:first-child {
