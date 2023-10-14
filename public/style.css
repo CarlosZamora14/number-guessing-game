@@ -1,6 +1,6 @@
 /* CSS variables */
 :root {
-  --green-clr: 220 255 3;
+  --green-clr: 222 249 80;
   --dark-clr: 51 52 47;
   --light-clr: 255 255 255;
   --blue-clr: 0 0 255;
@@ -157,7 +157,7 @@ body {
 .guess-section__number {
   text-align: center;
   font-weight: 700;
-  font-size: calc(var(--big-fs) * 6);
+  font-size: calc(var(--big-fs) * 4);
 }
 
 .guess-section__advice {
@@ -275,10 +275,26 @@ body {
   color: rgb(var(--light-clr));
 }
 
+/* Not found page */
+.not-found-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.not-found-main__title {
+  font-size: var(--big-fs);
+}
+
 /* Media queries */
 @media screen and (min-width: 20rem) {
   .new-game-form {
     flex-direction: row;
+  }
+
+  .guess-section__number {
+    font-size: calc(var(--big-fs) * 5);
   }
 }
 
@@ -311,6 +327,10 @@ body {
   .main-content__section:first-child {
     border-bottom: none;
     border-right: 1px solid rgb(var(--dark-clr));
+  }
+
+  .guess-section__number {
+    font-size: calc(var(--big-fs) * 6);
   }
 }
 

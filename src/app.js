@@ -25,6 +25,9 @@ const app = http.createServer((req, res) => {
     } else {
       requestListener(req, res);
     }
+  } else {
+    response.writeHead(405, { 'Content-Type': 'application/json' });
+    response.end(JSON.stringify({ statusCode: 405, msg: 'Invalid HTTP method. This API supports only POST and GET methods' }));
   }
 
   cleanup();

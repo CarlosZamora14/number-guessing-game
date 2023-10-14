@@ -30,8 +30,9 @@ function isPlaying(request, response) {
     data.previousGuesses = getPreviousGuesses(cookies['session-id']);
     data.difficulty = getGameDifficulty(cookies['session-id']);
     data.expirationTime = getExpirationTime(cookies['session-id']);
-    if (data.previousGuesses.length) {
-      const sign = hasWon(cookies['session-id'], data.previousGuesses.at(-1));
+    let tries = data.previousGuesses.length;
+    if (tries > 0) {
+      const sign = hasWon(cookies['session-id'], data.previousGuesses[tries - 1]);
       data.lastMsg = `Wrong! Your guess was too ${sign < 0 ? 'low' : 'high'}`;
     }
   }
